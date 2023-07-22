@@ -20,6 +20,7 @@ const ModalComponent = (props) => {
   return (
     <>
       <Modal title="Please confirm the below transactions!" open={props.isModalOpen} onOk={handleOk} onCancel={() => props.closeModal()}>
+        <h3>{props.intentContext}</h3>
          {props.transaction && props.transaction.map(txn => {
             return (
                 <p>

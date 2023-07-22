@@ -23,6 +23,8 @@ import { sendTransaction } from "./bundler/sendUserOp";
 import { MyWalletApi } from "./MyWalletApi";
 import { BananaAccount, BananaAccount__factory } from "./types";
 import Axios from "axios";
+import { getRequestDataForPaymaster } from "./paymaster/getRequestData";
+import { getPaymasterAndData } from "./paymaster/getPaymasterAndData";
 
 export class BananaSigner extends ERC4337EthersSigner {
   jsonRpcProvider: JsonRpcProvider;
@@ -270,6 +272,8 @@ export class BananaSigner extends ERC4337EthersSigner {
       userOperation.preVerificationGas = ethers.BigNumber.from(await userOperation.preVerificationGas).add(20000);
       userOperation.verificationGasLimit = 1.5e6;
       userOperation.callGasLimit = (await userOperation.callGasLimit)
+      userOperation.sender = (await userOperation.sender);
+      userOperation.nonce = (await userOperation.nonce);
 
       //@ts-ignore
       if(parseInt(userOperation.callGasLimit._hex) < 33100) {
@@ -293,7 +297,7 @@ export class BananaSigner extends ERC4337EthersSigner {
     try {
 
       const networkInfo = await this.jsonRpcProvider.getNetwork();
-      if(networkInfo.chainId === 81 || networkInfo.chainId === 592 || networkInfo.chainId === 44787) {
+      if(networkInfo.chainId === 81 || networkInfo.chainId === 592) {
         //! sending UserOp directly to ep for shibuya
         const receipt = await sendTransaction(userOperation, this.jsonRpcProvider);
         transactionResponse = receipt;
@@ -301,12 +305,19 @@ export class BananaSigner extends ERC4337EthersSigner {
         console.log('this is action', this.action);
         
         console.log('this is uyserop ', userOperation)
-        userOperation.sender = (await userOperation.sender);
-        userOperation.nonce = (await userOperation.nonce);
+
+
+        // need to get userOp signed here
 
         console.log('final op for forwariding', userOperation)
 
         if(this.action && this.action === 'register') {
+
+          // sponsor txn
+          const paymasterUrl = 'https://api.stackup.sh/v1/paymaster/8370e003d4262920e26f19358c6cc295ec7c7e1b6383596d0911ae1b4e25c5b6';
+          const requestData = await getRequestDataForPaymaster(userOperation);
+          const paymasterAndData = await getPaymasterAndData(paymasterUrl, requestData);
+          (userOperation || { paymasterAndData: null }).paymasterAndData = paymasterAndData || '';
           // send it to a url
           const forwarder = 'http://localhost:80';
           const resp = await Axios.post(forwarder + '/register', {

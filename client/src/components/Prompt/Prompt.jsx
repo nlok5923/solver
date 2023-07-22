@@ -57,6 +57,7 @@ const PromptComponent = () => {
   const [confirmModa, setConfirmModal] = useState(false);
   const [currentChain, setCurrentChain] = useState(Chains.mumbai);
   const [txnType, setTxnType] = useState("");
+  const [txnContext, setTxnContext] = useState('')
   const [tokens, setTokens] = useState({
     polygon: []
   });
@@ -193,6 +194,7 @@ const PromptComponent = () => {
     });
     const transactions = JSON.parse(res.data.transactions);
     setTransactions(transactions.transaction);
+    setTxnContext(transactions.context);
     setTxnType(transactions.type);
     setConfirmModal(true);
   };
@@ -227,11 +229,11 @@ const PromptComponent = () => {
               <div>
                 <TokenSection tokens={tokens.polygon} />
               <p className="walletaddress-div"> {walletAddress.slice(0, 7) + "..." + walletAddress.slice(37, 42)} </p>
-              <CopyToClipboard text={walletAddress} onCopy={() => toast.success('Address copied')}>
+              {/* <CopyToClipboard text={walletAddress} onCopy={() => toast.success('Address copied')}>
               <FaRegCopy style={{ marginLeft: "10px" }} />
-                </CopyToClipboard>
+                </CopyToClipboard> */}
                 <button className="connect-btn" onClick={() => setOnRamp(true)}>
-                  Fund
+                  Onramp funds
                 </button>
                 </div>
             ) : (
@@ -276,6 +278,7 @@ const PromptComponent = () => {
 
             <ModalComponent
               transaction={transactions}
+              intentContext={txnContext}
               isModalOpen={confirmModa}
               closeModal={() => closeModal()}
               doTransaction={() => sendTransaction()}

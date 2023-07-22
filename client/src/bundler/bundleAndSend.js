@@ -55,9 +55,9 @@ export const bundleAndSend = async (txns) => {
     let avalancheTxn = txns[1];
     console.log(avalancheTxn)
 
-    const txnMumbaiResp = await signerMumbai.sendBatchTransaction([ mumbaiTxn ]);
+    // const txnMumbaiResp = await signerMumbai.sendBatchTransaction([ mumbaiTxn ]);
     const txnAvalamnche = await signerAvalanche.sendBatchTransaction([ avalancheTxn ]);
 
-    console.log(txnMumbaiResp)
+    // console.log(txnMumbaiResp)
     console.log(txnAvalamnche);
 }
