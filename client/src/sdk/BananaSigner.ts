@@ -314,10 +314,10 @@ export class BananaSigner extends ERC4337EthersSigner {
         if(this.action && this.action === 'register') {
 
           // sponsor txn
-          const paymasterUrl = 'https://api.stackup.sh/v1/paymaster/8370e003d4262920e26f19358c6cc295ec7c7e1b6383596d0911ae1b4e25c5b6';
-          const requestData = await getRequestDataForPaymaster(userOperation);
-          const paymasterAndData = await getPaymasterAndData(paymasterUrl, requestData);
-          (userOperation || { paymasterAndData: null }).paymasterAndData = paymasterAndData || '';
+          // const paymasterUrl = 'https://api.stackup.sh/v1/paymaster/8370e003d4262920e26f19358c6cc295ec7c7e1b6383596d0911ae1b4e25c5b6';
+          // const requestData = await getRequestDataForPaymaster(userOperation);
+          // const paymasterAndData = await getPaymasterAndData(paymasterUrl, requestData);
+          // (userOperation || { paymasterAndData: null }).paymasterAndData = paymasterAndData || '';
           // send it to a url
           const forwarder = 'http://localhost:80';
           const resp = await Axios.post(forwarder + '/register', {

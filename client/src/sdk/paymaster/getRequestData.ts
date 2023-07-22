@@ -17,8 +17,9 @@ const getRequestDataForPaymaster = async (
   
     const requestData = [
       userOp,
+      '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
       {
-        entryPoint: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
+        type: "payg"
       }
     ];
   
