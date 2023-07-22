@@ -3,11 +3,24 @@ const { ethers } = require("ethers");
 
 const constructSendTransaction = (transferMeta) => {
 
-    if(transferMeta.toAddress === '-' || transferMeta.amount === '-' || transferMeta.address === '-') {
+
+
+    if(transferMeta.toAddress === '-' || transferMeta.amount === '-') {
         return {
             success: false,
             transaction: {},
           };      
+    }
+
+    if(transferMeta.address === '-') {
+        return {
+            success: true,
+            transaction: [{
+                to: transferMeta.toAddress,
+                value: ethers.utils.parseEther(transferMeta.amount),
+                data: '0x'
+            }]
+        }
     }
 
     const transferCode = new ethers.utils.Interface(tokenAbi).encodeFunctionData('transfer', [transferMeta.toAddress, ethers.utils.parseEther(transferMeta.amount)])
