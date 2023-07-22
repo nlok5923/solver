@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Prompt.css";
 import { Banana, Chains } from "../../sdk/index";
 import "@rainbow-me/rainbowkit/styles.css";
@@ -8,15 +8,16 @@ import toast, { Toaster } from "react-hot-toast";
 import Loader from "../shared/Loader/Loader";
 import ModalComponent from "../shared/Modal/Modal";
 import { Button, Dropdown, Space } from "antd";
-import StakingArtifact from "../abi/Staking.json";
+// import StakingArtifact from "../abi/Staking.json";
 import { bundleAndSend } from "../../bundler/bundleAndSend";
 import { createAttestation } from '../../attest/createAttestation'
 import { useLazyQueryWithPagination } from '@airstack/airstack-react';
 import { ERC20TokensQueryPolygon } from "../../query";
 import TokenSection from "../tokens/Token";
 import { FaRegCopy } from 'react-icons/fa'
-import ChatIconModal from "../Chats/Chats";
+// import ChatIconModal from "../Chats/Chats";
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+import OnrampComponent from "../Onramp/Onramp";
 
 const PromptComponent = () => {
   const items = [
@@ -46,9 +47,6 @@ const PromptComponent = () => {
     },
   ];
 
-  // const prices = await getUSDCUSDTCurrentPrice()
-
-
   const [walletAddress, setWalletAddress] = useState("");
   const [bananaSdkInstance, setBananSdkInstance] = useState(null);
   const [transactions, setTransactions] = useState();
@@ -62,6 +60,7 @@ const PromptComponent = () => {
   const [tokens, setTokens] = useState({
     polygon: []
   });
+  const [onramp, setOnRamp] = useState(false)
 
   const [fetch, { data: data, loading, pagination }] =
   useLazyQueryWithPagination(ERC20TokensQueryPolygon);
@@ -77,6 +76,8 @@ const PromptComponent = () => {
         limit: 20
       });
     }
+
+    // initStripe()
   }, [fetch, walletAddress]);
 
   useEffect(() => {
@@ -229,6 +230,9 @@ const PromptComponent = () => {
               <CopyToClipboard text={walletAddress} onCopy={() => toast.success('Address copied')}>
               <FaRegCopy style={{ marginLeft: "10px" }} />
                 </CopyToClipboard>
+                <button className="connect-btn" onClick={() => setOnRamp(true)}>
+                  Fund
+                </button>
                 </div>
             ) : (
               <div>
@@ -246,6 +250,7 @@ const PromptComponent = () => {
                 </button>
               </div>
             )}
+                {/* <OnrampComponent openOnramp={onramp} /> */}
           </div>
         </div>
         <div className="prompt">
