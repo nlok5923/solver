@@ -1,0 +1,88 @@
+.prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #f2f2f2;
+    padding-top: 20px; /* Add top padding to create space for the title */
+  }
+  
+  .title {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .inputField {
+    padding: 10px;
+    width: 40vw;
+    height: 3vh;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.2);
+    color: black;
+    font-size: 16px;
+    font-family: 'Quicksand', sans-serif;
+  }
+  
+  .executeButton {
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    outline: none;
+    background: #3498db;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.2);
+    font-family: 'Quicksand', sans-serif;
+  }
+  
+  .executeButton:hover {
+    opacity: 0.8;
+  }
+  
+  .rainbow-div {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .rainbow-btn {
+    padding: 1% 1% 0 0;
+  }
+
+  .connect-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    font-family: "Quicksand";
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+
+  .connect-btn:hover {
+    background-color: #2980b9;
+    cursor: pointer;
+  }
+  
+  .connect-btn:focus {
+    outline: none;
+  }
+  

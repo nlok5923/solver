@@ -1,0 +1,56 @@
+/* Styling for the chat icon */
+.chat-icon-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .chat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1890ff;
+    color: #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .notification-badge {
+    background-color: red;
+    color: #fff;
+    border-radius: 50%;
+    padding: 4px 8px;
+    margin-left: 6px;
+    font-size: 12px;
+  }
+  
+  /* Hover effect for the chat icon */
+  .chat-icon:hover {
+    background-color: #40a9ff;
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Styling for chat cards */
+  .chat-card {
+    width: 100%;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+  
+  .approve-button {
+    background-color: red;
+    border: none;
+  }
+  
+  .approve-button:hover {
+    background-color: #ff4d4f;
+  }
+  

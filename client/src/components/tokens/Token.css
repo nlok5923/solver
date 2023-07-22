@@ -1,0 +1,38 @@
+/* styles.css (or any other suitable name) */
+
+.container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* align-items: center; */
+    border: 1px solid black;
+  }
+  
+  .tokenContainer {
+    align-items: center;
+    margin-top: 5px;
+    display: flex;
+  }
+  
+  .tokenImage {
+    width: 30px;
+    height: 30px;
+    /* margin-right: 10px; */
+    border-radius: 50%;
+    /* display: block; */
+    /* margin: auto; */
+  }
+  
+  .tokenInfo {
+    /* display: flex; */
+    /* flex-direction: column; */
+    padding-left: 10px;
+    font-family: 'quicksand';
+  }
+  

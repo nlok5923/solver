@@ -1,0 +1,76 @@
+{
+  "name": "intent-solver",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@account-abstraction/contracts": "^0.6.0",
+    "@account-abstraction/sdk": "^0.6.0",
+    "@airstack/airstack-react": "^0.4.5",
+    "@axelar-network/axelarjs-sdk": "^0.13.5",
+    "@ethereum-attestation-service/eas-sdk": "^0.29.1",
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
+    "@pushprotocol/restapi": "^1.4.3",
+    "@pushprotocol/socket": "^0.5.1",
+    "@rainbow-me/rainbowkit": "^0.8.1",
+    "@rize-labs/banana-rainbowkit-plugin": "^1.0.18",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/node": "^20.4.2",
+    "@types/uuid": "^9.0.0",
+    "antd": "^5.7.0",
+    "asn1.js": "^5.4.1",
+    "assert": "^2.0.0",
+    "axios": "^1.4.0",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "constants-browserify": "^1.0.0",
+    "crypto-browserify": "^3.12.0",
+    "dotenv": "^16.3.1",
+    "ethers": "^5.7.2",
+    "https-browserify": "^1.0.0",
+    "langchain": "^0.0.109",
+    "natural": "^6.5.0",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
+    "react-dom": "^18.2.0",
+    "react-error-overlay": "^6.0.11",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^4.10.1",
+    "react-scripts": "5.0.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.1",
+    "uuid": "^9.0.0",
+    "wagmi": "^0.9.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
