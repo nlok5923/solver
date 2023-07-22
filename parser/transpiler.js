@@ -24,6 +24,9 @@ const { contructBridgeTransactionForStaking } = require('./transactions/bridgeAn
 
 const transpiler = async (currentStep, classifier, userAddress, chain) => {
 
+  console.log('this is chain ', chain)
+  console.log('this is chain ', typeof chain)
+  console.log('this is chain ', chain === 137)
   const context = classifier.classify(currentStep);
   console.log('step context ', context);
 
@@ -44,8 +47,11 @@ const transpiler = async (currentStep, classifier, userAddress, chain) => {
     let swapMeta;
     // order would always be correct in supportedTokenSwap
     
-    if(chain === 137)
+    if(chain === "137") {
+      console.log('we are here ', chain);
     swapMeta = supportedTokenSwap.filter(pair => isPairSimilar(pair.pair, swapInfo[0]));
+    console.log('these are supportred tokens ', supportedTokenSwap);
+    }
     else 
     swapMeta = supportedTokenSwapGnosis.filter(pair => isPairSimilar(pair.pair, swapInfo[0]));
 
