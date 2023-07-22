@@ -21,6 +21,7 @@ export const POLYGON_MAINNET_RPC = "https://polygon-mainnet.g.alchemy.com/v2/M6o
 export const ASTAR_MAINNET_RPC = "https://astar.public.blastapi.io";
 export const FUJI = 'https://ava-testnet.public.blastapi.io/ext/bc/C/rpc';
 export const CELO_TESTNET_RPC = 'https://alfajores-forno.celo-testnet.org';
+export const MANTLE_TESTNET_RPC = 'https://rpc.testnet.mantle.xyz'
 export const ENTRYPOINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789";
 export const BUNDLER_EOA_PUBLIC_KEY =
   "0xFBd25f4F9de58B72F5e652B51625D3fCD761dec5"; 
@@ -39,6 +40,7 @@ export enum Chains {
   astar = 592,
   fuji = 43113,
   celoTestnet = 44787,
+  mantleTestnet = 5001,
 }
 
 export function getClientConfigInfo(chain: Chains): ClientConfig {
@@ -97,6 +99,11 @@ export function getClientConfigInfo(chain: Chains): ClientConfig {
       return {
         entryPointAddress: '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789',
         bundlerUrl: CELO_TESTNET_RPC
+      }
+    case Chains.mantleTestnet:
+      return {
+        entryPointAddress: '0x68078F35eedFf6A6a9521A323F3e45dfaba1C4CF',
+        bundlerUrl: MANTLE_TESTNET_RPC
       }
   }
 }
@@ -213,6 +220,15 @@ export function getChainSpecificAddress(chain: Chains): ChainConfig {
           "0x6f4D71B05140a1DD6D328e0C58216edD1590654e",
         fallBackHandlerAddress: "0xac1c08a5a59cEA20518f7201bB0dda29d9454eb0",
     };
+    case Chains.mantleTestnet:
+      return {
+        Elliptic: "0x652D29F01fdF8d0c20F78f51bAc9B173B3a76a9B",
+        TouchIdSafeWalletContractProxyFactoryAddress:
+          "0x9C0A83154846725446EF3907DaAb41951d2635A1",
+        TouchIdSafeWalletContractSingletonAddress:
+          "0x824Eae34D5bB73FE97969dc80f01c5baf0D3f8D6",
+        fallBackHandlerAddress: "0x4314e106c276413814a01A1618B06c39161fc290",
+      }
   }
 }
 
@@ -258,6 +274,10 @@ export function getChainSpecificConfig(chain: Chains): ChainSpecificConfig {
     case Chains.celoTestnet:
       return {
         jsonRpcUrl: CELO_TESTNET_RPC
+      }
+    case Chains.mantleTestnet:
+      return {
+        jsonRpcUrl: MANTLE_TESTNET_RPC
       }
   }
 }
