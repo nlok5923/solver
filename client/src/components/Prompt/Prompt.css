@@ -86,3 +86,18 @@
     outline: none;
   }
   
+  .chain-dropdown {
+    margin-right: 20px;
+    height: 4.5vh;
+    width: 9vw;
+    font-family: "Quicksand";
+  }
+
+  .walletaddress-div {
+    font-family: 'Quicksand';
+    color: white;
+    background-color: #2980b9;
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 18px;
+  }

@@ -14,7 +14,9 @@ import { createAttestation } from '../../attest/createAttestation'
 import { useLazyQueryWithPagination } from '@airstack/airstack-react';
 import { ERC20TokensQueryPolygon } from "../../query";
 import TokenSection from "../tokens/Token";
+import { FaRegCopy } from 'react-icons/fa'
 import ChatIconModal from "../Chats/Chats";
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 const PromptComponent = () => {
   const items = [
@@ -27,13 +29,19 @@ const PromptComponent = () => {
     {
       key: Chains.polygonMainnet,
       label: (
-        <h4 onClick={() => setCurrentChain(Chains.polygonMainnet)}>Polygon</h4>
+        <h4 onClick={() => setCurrentChain(Chains.polygonMainnet)}>Polygon Mainnet</h4>
       ),
     },
     {
       key: Chains.gnosis,
       label: (
-        <h4 onClick={() => setCurrentChain(Chains.gnosis)}>Polygon</h4>
+        <h4 onClick={() => setCurrentChain(Chains.gnosis)}>Gnosis</h4>
+      ),
+    },
+    {
+      key: Chains.celoTestnet,
+      label: (
+        <h4 onClick={() => setCurrentChain(Chains.celoTestnet)}>Celo Testnet</h4>
       ),
     },
   ];
@@ -59,6 +67,7 @@ const PromptComponent = () => {
   useLazyQueryWithPagination(ERC20TokensQueryPolygon);
 
   useEffect(() => {
+    // for now hardcoded the tokens
     if ('0x288d1d682311018736B820294D22Ed0DBE372188') {
       setTokens({
         polygon: []
@@ -68,11 +77,6 @@ const PromptComponent = () => {
         limit: 20
       });
     }
-    /*
-      Even though ERC20 tokens are not dependant on tokenType, we added tokenType to the dependency array to force a refetch when tokenType changes.
-      Without this, the tokens list would be unable to fetch additional pages since the window scroll height would be too great (too many ERC20 items).
-      InfiniteScroll depends on the window scroll height, if the height is too high, user will have to scroll to the bottom to initiate a pagination call.
-    */
   }, [fetch, walletAddress]);
 
   useEffect(() => {
@@ -127,6 +131,11 @@ const PromptComponent = () => {
       createWallet();
     }
   };
+
+  const closeModal = () => {
+    setConfirmModal(false);
+    setIsLoading(false);
+  }
 
   const sendTransaction = async () => {
     setConfirmModal(false);
@@ -186,6 +195,26 @@ const PromptComponent = () => {
     setTxnType(transactions.type);
     setConfirmModal(true);
   };
+  // goerli = 5,
+  // mumbai = 80001,
+  // polygonMainnet = 137,
+  // optimismTestnet = 420,
+  // gnosis = 100,
+  // chiadoTestnet = 10200,
+  // shibuyaTestnet = 81,
+  // astar = 592,
+  // fuji = 43113,
+  // celoTestnet = 44787,
+  // mantleTestnet = 5001,
+  const getChainName = (chain) => {
+    if(chain === 137) return "Polygon"
+    if(chain === 100) return "Gnosis"
+    if(chain === 5) return "Goerli"
+    if(chain === 80001) return "Polygon Mumbai"
+    if(chain === 420) return "Optimism Testnet"
+    if(chain === 10200) return "Chiado Testnet"
+    if(chain === 44787) return "Celo Testnet"
+  };
 
   return (
     <div>
@@ -196,8 +225,10 @@ const PromptComponent = () => {
             {walletAddress ? (
               <div>
                 <TokenSection tokens={tokens.polygon} />
-              <p> {walletAddress}</p>
-              {/* <ChatIconModal walletAddress={walletAddress} signer={walletInstance.getSigner()}  /> */}
+              <p className="walletaddress-div"> {walletAddress.slice(0, 7) + "..." + walletAddress.slice(37, 42)} </p>
+              <CopyToClipboard text={walletAddress} onCopy={() => toast.success('Address copied')}>
+              <FaRegCopy style={{ marginLeft: "10px" }} />
+                </CopyToClipboard>
                 </div>
             ) : (
               <div>
@@ -206,8 +237,9 @@ const PromptComponent = () => {
                     items,
                   }}
                   placement="bottom"
+                  className="chain-dropdown"
                 >
-                  <Button>{currentChain}</Button>
+                  <Button>{ getChainName(currentChain)}</Button>
                 </Dropdown>
                 <button className="connect-btn" onClick={() => connectWallet()}>
                   Connect
@@ -240,6 +272,7 @@ const PromptComponent = () => {
             <ModalComponent
               transaction={transactions}
               isModalOpen={confirmModa}
+              closeModal={() => closeModal()}
               doTransaction={() => sendTransaction()}
             />
           </div>
