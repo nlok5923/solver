@@ -18,6 +18,7 @@ import { FaRegCopy } from "react-icons/fa";
 // import ChatIconModal from "../Chats/Chats";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import OnrampComponent from "../Onramp/Onramp";
+import { saveToLocalStorage } from "../../utils/saveToLocalstorage";
 
 const PromptComponent = () => {
   const items = [
@@ -186,8 +187,45 @@ const PromptComponent = () => {
     setIsLoading(false);
   };
 
+  const getPinataMetaData = (intent) => (
+    JSON.stringify({
+      "pinataOptions": {
+        "cidVersion": 1
+      },
+      "pinataMetadata": {
+        "name": "testing",
+        "keyvalues": {
+          "intent": intent,
+        }
+      },
+      "pinataContent": {
+        "intent": intent
+      }
+    })
+  );
+
+  const getPinataConfig = (intent) => (
+    {
+      method: 'post',
+      url: 'https://api.pinata.cloud/pinning/pinJSONToIPFS',
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${process.env.REACT_APP_PINATA_JWT}`
+      },
+      data: getPinataMetaData(intent)
+    }
+  )
+
   const generateTransactions = async () => {
     setIsLoading(true);
+    const pinataAxiosConfig = getPinataConfig(intent);
+    console.log('this is pijnata axios config ', pinataAxiosConfig)
+    // saving intents on ipfs for faster autocomplete
+    const savingRes = await Axios(pinataAxiosConfig)
+    console.log('resp', savingRes);
+    // resp.data.IpfsHash
+    saveToLocalStorage(walletAddress, savingRes.data.IpfsHash);
+
     const res = await Axios.get(SERVER_URL + "/solve", {
       params: {
         intent: intent,
