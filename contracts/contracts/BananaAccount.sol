@@ -11,8 +11,14 @@ import './utils/EllipticalCurveLibrary.sol';
 import './utils/Exec.sol';
 import './utils/BytesUtils.sol';
 import './utils/Base64.sol';
+import { AxelarExecutable } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol';
+import { IAxelarGateway } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGateway.sol';
+import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol';
+import { IERC20 } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IERC20.sol';
 
-contract BananaAccount is Safe {
+contract BananaAccount is Safe, AxelarExecutable {
+    event TokenReceivedEvent(string tokenSymbol, string sourceAddress, uint256 amount, string sourceChain);
+
     using BytesUtils for bytes32;
 
     //return value in case of signature failure, with no time-range.
@@ -20,22 +26,15 @@ contract BananaAccount is Safe {
 
     //EIP4337 trusted entrypoint
     address public entryPoint;
+     IAxelarGasService immutable gasService;
 
     //maintaing mapping of encodedId to qValues
     mapping (bytes32 => uint256[2]) public encodedIdHashToQValues;
 
-    /// @dev Setup function sets initial storage of contract.
-    /// @param _owners List of Safe owners.
-    /// @param _threshold Number of required confirmations for a Safe transaction.
-    /// @param to Contract address for optional delegate call.
-    /// @param data Data payload for optional delegate call.
-    /// @param fallbackHandler Handler for fallback calls to this contract
-    /// @param paymentToken Token that should be used for the payment (0 is ETH)
-    /// @param payment Value that should be paid
-    /// @param paymentReceiver Address that should receive the payment (or 0 if tx.origin)
-    /// @param _entryPoint Address for the trusted EIP4337 entrypoint
-    /// @param _encodedIdHash contains the hash of encodedId which corresponds to the qValues
-    /// @param _qValues public address x and y coordinates of the user
+    constructor(address _gateway, address _gasReceiver) AxelarExecutable(_gateway) {
+         gasService = IAxelarGasService(_gasReceiver);
+    }
+
     function setupWithEntrypoint(
         address[] calldata _owners,
         uint256 _threshold,
@@ -147,11 +146,6 @@ contract BananaAccount is Safe {
         return 0;
     }
 
-    /// @dev Allows the entrypoint to execute a transaction without any further confirmations.
-    /// @param to Destination address of module transaction.
-    /// @param value Ether value of module transaction.
-    /// @param data Data payload of module transaction.
-    /// @param operation Operation type of module transaction.
     function execTransactionFromEntrypoint(
         address to,
         uint256 value,
@@ -161,13 +155,60 @@ contract BananaAccount is Safe {
         // Only Entrypoint is allowed.
         require(msg.sender == entryPoint, 'account: not from EntryPoint');
         // Execute transaction without further confirmations.
+        // just for testing
+         emit TokenReceivedEvent("sample", "0x288d1d682311018736B820294D22Ed0DBE372188", 10, "chain");
         _executeAndRevert(to, value, data, operation);
     }
 
-    /// @dev check if the signature is valid
-    /// @param messageToBeSigned Message to be signed.
-    /// @param signature 'r' and 's' values of the signature.
-    /// @param publicKey 'x' and 'y' coordinates of the public key of R1 curve
+
+    function execBatchTransactionFromEntrypoint(
+        address[] calldata to,
+        uint256[] calldata value,
+        bytes[] memory data,
+        Enum.Operation operation
+    ) public {
+        // Only Entrypoint is allowed.
+        require(msg.sender == entryPoint, 'account: not from EntryPoint');
+        // Execute transaction without further confirmations.
+        require(to.length == data.length, "wrong array lengths");
+        for(uint256 i=0; i < to.length; i++) {
+            _executeAndRevert(to[i], value[i], data[i], operation);
+        }
+    }
+    function _executeWithToken(
+        string calldata sourceChain,
+        string calldata sourceAddress,
+        bytes calldata payload,
+        string calldata tokenSymbol,
+        uint256 amount
+        ) internal override {
+            emit TokenReceivedEvent(tokenSymbol, sourceAddress, amount, sourceChain);
+    }
+
+       function crossChainTransact(
+        string memory symbol,
+        string memory destinationChain,
+        string memory contractAddress,
+        uint256 amount,
+        bytes memory payload
+    ) public payable {
+        address tokenX = gateway.tokenAddresses(symbol);
+        IERC20(tokenX).approve(address(gateway), amount);
+
+        gasService.payNativeGasForContractCallWithToken{value: msg.value}(
+            address(this),
+            destinationChain,
+            contractAddress,
+            payload,
+            symbol,
+            amount,
+            msg.sender
+        );
+
+        gateway.callContractWithToken(destinationChain, contractAddress, payload, symbol, amount);
+    }
+
+
     function verifySignature(bytes32 messageToBeSigned, uint256[2] calldata signature, uint256[2] calldata publicKey) external view returns (bool) {
         return Secp256r1.Verify(
             uint(messageToBeSigned),
@@ -195,15 +236,4 @@ contract BananaAccount is Safe {
             revert(abi.decode(returnData, (string)));
         }
     }
-
-    /// @dev There should be only one verified entrypoint per chain
-    /// @dev so this function should only be used if there is a problem with
-    /// @dev the main entrypoint
-    function replaceEntrypoint(address newEntrypoint) public authorized {
-        entryPoint = newEntrypoint;
-    }
-
-    function addNewDevice(uint256[2] memory _qValues, bytes32 _encodedIdHash) public authorized {
-        encodedIdHashToQValues[_encodedIdHash] = _qValues;
-    } 
 }
