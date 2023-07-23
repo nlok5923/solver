@@ -10,7 +10,8 @@ require('dotenv').config();
 let ops = [];
 
 const sender = process.env.SENDER_ADDRESS;
-const webSocketUrl = process.env.WSS_OPT_GOERLI;
+const webSocketUrl = 'wss://cold-virulent-spree.matic.discover.quiknode.pro/79b77a73c0f39fa9e941ceedf0d769fef93bc29f/'
+// process.env.WSS_OPT_GOERLI;
 console.log(sender, webSocketUrl)
 const singletonAddress = '0xb0c3F912540e703d5DB1681B5B7075c60a46F2d3';
 
