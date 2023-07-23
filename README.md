@@ -1,6 +1,6 @@
-# Project Title
+# Bob the Solver
 
-Bob the Solver: An implementation of Infrastructe for intent based transactions
+An implementation of Infrastructure for intent based transactions with Account abstraction
 
 ## Getting Started
 
