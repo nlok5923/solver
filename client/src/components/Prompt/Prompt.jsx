@@ -19,7 +19,7 @@ import { FaRegCopy } from "react-icons/fa";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import OnrampComponent from "../Onramp/Onramp";
 import { saveToLocalStorage } from "../../utils/saveToLocalstorage";
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
 // import { AutoComplete } from "react-autocomplete";
 
 const PromptComponent = () => {
@@ -71,26 +71,27 @@ const PromptComponent = () => {
 
   const [fetch, { data: data, loading, pagination }] =
     useLazyQueryWithPagination(ERC20TokensQueryPolygon);
-  
-  const gateway = (hash) => `https://beige-yeasty-scorpion-513.mypinata.cloud/ipfs/${hash}`;
+
+  const gateway = (hash) =>
+    `https://beige-yeasty-scorpion-513.mypinata.cloud/ipfs/${hash}`;
   const fetchIntents = async () => {
     let hashes = localStorage.getItem(walletAddress);
-    if(hashes) {
+    if (hashes) {
       hashes = JSON.parse(hashes);
-      console.log(hashes, hashes[0])
-      for(let i=0; i < hashes.length; i++) {
-      const res = await Axios.get(gateway(hashes[i]))
-      console.log(res);
-      let pIntents = previosIntents;
-      pIntents.push({
-        id: i,
-        name: res.data.intent
-      })
-      setPreviousIntents(pIntents)
-      console.log("all intens ", previosIntents)
+      console.log(hashes, hashes[0]);
+      for (let i = 0; i < hashes.length; i++) {
+        const res = await Axios.get(gateway(hashes[i]));
+        console.log(res);
+        let pIntents = previosIntents;
+        pIntents.push({
+          id: i,
+          name: res.data.intent,
+        });
+        setPreviousIntents(pIntents);
+        console.log("all intens ", previosIntents);
       }
     }
-  }
+  };
 
   useEffect(() => {
     // for now hardcoded the tokens
@@ -104,7 +105,7 @@ const PromptComponent = () => {
       });
     }
 
-    fetchIntents()
+    fetchIntents();
     // initStripe()
   }, [fetch, walletAddress]);
 
@@ -211,42 +212,39 @@ const PromptComponent = () => {
     setIsLoading(false);
   };
 
-  const getPinataMetaData = (intent) => (
+  const getPinataMetaData = (intent) =>
     JSON.stringify({
-      "pinataOptions": {
-        "cidVersion": 1
+      pinataOptions: {
+        cidVersion: 1,
       },
-      "pinataMetadata": {
-        "name": "testing",
-        "keyvalues": {
-          "intent": intent,
-        }
+      pinataMetadata: {
+        name: "testing",
+        keyvalues: {
+          intent: intent,
+        },
       },
-      "pinataContent": {
-        "intent": intent
-      }
-    })
-  );
+      pinataContent: {
+        intent: intent,
+      },
+    });
 
-  const getPinataConfig = (intent) => (
-    {
-      method: 'post',
-      url: 'https://api.pinata.cloud/pinning/pinJSONToIPFS',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${process.env.REACT_APP_PINATA_JWT}`
-      },
-      data: getPinataMetaData(intent)
-    }
-  )
+  const getPinataConfig = (intent) => ({
+    method: "post",
+    url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.REACT_APP_PINATA_JWT}`,
+    },
+    data: getPinataMetaData(intent),
+  });
 
   const generateTransactions = async () => {
     setIsLoading(true);
     const pinataAxiosConfig = getPinataConfig(intent);
-    console.log('this is pijnata axios config ', pinataAxiosConfig)
+    console.log("this is pijnata axios config ", pinataAxiosConfig);
     // saving intents on ipfs for faster autocomplete
-    const savingRes = await Axios(pinataAxiosConfig)
-    console.log('resp', savingRes);
+    const savingRes = await Axios(pinataAxiosConfig);
+    console.log("resp", savingRes);
     // resp.data.IpfsHash
     saveToLocalStorage(walletAddress, savingRes.data.IpfsHash);
 
@@ -260,7 +258,12 @@ const PromptComponent = () => {
     const transactions = JSON.parse(res.data.transactions);
     setTransactions(transactions.transaction);
     setTxnContext(transactions.context);
-    setTxnType(transactions.type);
+
+    if (transactions.type) {
+      setTxnType(transactions.type);
+    } else {
+      setTxnType("none");
+    }
     setConfirmModal(true);
   };
   // goerli = 5,
@@ -287,50 +290,52 @@ const PromptComponent = () => {
   const itemss = [
     {
       id: 0,
-      name: 'Cobol'
+      name: "Cobol",
     },
     {
       id: 1,
-      name: 'JavaScript'
+      name: "JavaScript",
     },
     {
       id: 2,
-      name: 'Basic'
+      name: "Basic",
     },
     {
       id: 3,
-      name: 'PHP'
+      name: "PHP",
     },
     {
       id: 4,
-      name: 'Java'
-    }
-  ]
+      name: "Java",
+    },
+  ];
 
   const handleOnSearch = (string, results) => {
     // onSearch will have as the first callback parameter
     // the string searched and for the second the results.
-    console.log(string, results)
+    console.log(string, results);
     setIntent(string);
-  }
+  };
 
   const handleOnSelect = (item) => {
     // the item selected
-    console.log(item)
-  }
+    console.log(item);
+  };
 
   const handleOnFocus = () => {
-    console.log('Focused')
-  }
+    console.log("Focused");
+  };
 
   const formatResult = (item) => {
     return (
       <>
         {/* <span style={{ display: 'block', textAlign: 'left' }}>id: {item.id}</span> */}
-        <span style={{ display: 'block', textAlign: 'left' }}>name: {item.name}</span>
+        <span style={{ display: "block", textAlign: "left" }}>
+          name: {item.name}
+        </span>
       </>
-    )
-  }
+    );
+  };
 
   return (
     <div>
@@ -375,7 +380,7 @@ const PromptComponent = () => {
         </div>
         <div className="prompt">
           <div className="content">
-          {/* <ReactSearchAutocomplete
+            {/* <ReactSearchAutocomplete
             items={previosIntents}
             onSearch={handleOnSearch}
             // onHover={handleOnHover}

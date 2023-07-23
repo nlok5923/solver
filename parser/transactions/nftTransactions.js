@@ -46,7 +46,7 @@ const constructNFTMintTransaction = (nftData) => {
 
   return {
     success: true,
-    context: 'This transaction will mint BAYC token of tokenid 124 to your address. The minting cost is currently 2.43 eth.',
+    context: 'This transaction will mint BAYC NFT token to your address. The minting cost is currently 2.43 matic.',
     transaction: [
       {
         to: address,
@@ -149,6 +149,7 @@ const constructNFTSellTransaction = (nftData) => {
 
   return {
     success: true,
+    context: `This transaction would grant approval to your NFT of tokenid ${nftData.tokenId} to this ethereum address ${nftData.toAddress}`,
     transaction: [
       {
         to: address,

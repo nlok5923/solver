@@ -143,7 +143,7 @@ const nftInfoExtracter = [
   },
   {
     id: 2,
-    question: `About which operation does the given statement talks about buying or selling if it is buying return answer as buy or if it is about selling return answer as sell ${ONE_WORD_ANS} also ${INFO_NOT_AVALAIBLE}`,
+    question: `About which operation does the given statement talks about buy or sell if it is buying return answer as "buy" or if it is about selling return answer as "sell" ${ONE_WORD_ANS} also ${INFO_NOT_AVALAIBLE}`,
   },
   {
     id: 3,
