@@ -35,6 +35,7 @@ const contructBridgeTransactionForStaking = async (stakingData) => {
 
     return {
         success: true,
+        context: `This transaction will first bridge your ${stakingData.amount} amount of WMATIC token to Avalanche blockchain and then it will stake your ${stakingData.amount} token into Aave Staking contract which is avalaible on Avalanche as after research we found out it is currently giving max APY (5.69%) on staked assets.`,
         transaction: [
             {
                 to: stakingData.userAddress,
@@ -48,7 +49,7 @@ const contructBridgeTransactionForStaking = async (stakingData) => {
                 gasLimit: '0x55555',
                 data: new ethers.utils.Interface(WMATIC).encodeFunctionData(
                 'transfer',
-                [avalancheStaking, ethers.utils.parseEther("0.00001")])
+                [avalancheStaking, ethers.utils.parseEther(stakingData.amount)])
             }
         ]
     }

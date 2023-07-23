@@ -46,6 +46,7 @@ const constructNFTMintTransaction = (nftData) => {
 
   return {
     success: true,
+    context: 'This transaction will mint BAYC token of tokenid 124 to your address. The minting cost is currently 2.43 eth.',
     transaction: [
       {
         to: address,
@@ -79,6 +80,7 @@ const constructNFTTransferTransaction = (nftData) => {
 
   return {
     success: true,
+    context: `This transaction will transfer your BAYC NFT of tokenid ${nftData.tokenId} to ${nftData.toAddress} address.`,
     transaction: [
       {
         to: address,
@@ -93,12 +95,13 @@ const constructNFTBuyTransaction = (nftData) => {
   // bunching down approve and transferFrom transaction transaction
   if (
     nftData.userAddress === "-" ||
-    // nftData.toAddress === "-" ||
+    nftData.toAddress === "-" ||
     nftData.tokenId === "-"
   )
     return {
       success: false,
-      transaction: {},
+      context: `ATTENTION: The current bid price for BAYC NFT with token id 124 is 5.6 eth. The optimal bid based on older purchases could be 6.3 eth.` ,
+      transaction: [],
     };
 
   const address = nftData.address;
@@ -112,6 +115,7 @@ const constructNFTBuyTransaction = (nftData) => {
 
   return {
     success: true,
+    context: `This transaction will buy you a BAYC NFT of tokenid ${nftData.tokenId} which has been already approved for your ethereum address.`,
     transaction: [
       {
         to: address,

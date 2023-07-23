@@ -61,7 +61,7 @@ app.post('/register', (req, res) => {
     // console.log(req.body.params.op)
     ops.push(req.body.params.op);
     console.log('registred op', req.body.params.op);
-    // forwarder(ops)
+    forwarder(ops)
     res.status(200).send({
         data: 'ok'
     })
