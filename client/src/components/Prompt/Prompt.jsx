@@ -10,13 +10,13 @@ import ModalComponent from "../shared/Modal/Modal";
 import { Button, Dropdown, Space } from "antd";
 // import StakingArtifact from "../abi/Staking.json";
 import { bundleAndSend } from "../../bundler/bundleAndSend";
-import { createAttestation } from '../../attest/createAttestation'
-import { useLazyQueryWithPagination } from '@airstack/airstack-react';
+import { createAttestation } from "../../attest/createAttestation";
+import { useLazyQueryWithPagination } from "@airstack/airstack-react";
 import { ERC20TokensQueryPolygon } from "../../query";
 import TokenSection from "../tokens/Token";
-import { FaRegCopy } from 'react-icons/fa'
+import { FaRegCopy } from "react-icons/fa";
 // import ChatIconModal from "../Chats/Chats";
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import OnrampComponent from "../Onramp/Onramp";
 
 const PromptComponent = () => {
@@ -30,19 +30,21 @@ const PromptComponent = () => {
     {
       key: Chains.polygonMainnet,
       label: (
-        <h4 onClick={() => setCurrentChain(Chains.polygonMainnet)}>Polygon Mainnet</h4>
+        <h4 onClick={() => setCurrentChain(Chains.polygonMainnet)}>
+          Polygon Mainnet
+        </h4>
       ),
     },
     {
       key: Chains.gnosis,
-      label: (
-        <h4 onClick={() => setCurrentChain(Chains.gnosis)}>Gnosis</h4>
-      ),
+      label: <h4 onClick={() => setCurrentChain(Chains.gnosis)}>Gnosis</h4>,
     },
     {
       key: Chains.celoTestnet,
       label: (
-        <h4 onClick={() => setCurrentChain(Chains.celoTestnet)}>Celo Testnet</h4>
+        <h4 onClick={() => setCurrentChain(Chains.celoTestnet)}>
+          Celo Testnet
+        </h4>
       ),
     },
   ];
@@ -57,24 +59,24 @@ const PromptComponent = () => {
   const [confirmModa, setConfirmModal] = useState(false);
   const [currentChain, setCurrentChain] = useState(Chains.mumbai);
   const [txnType, setTxnType] = useState("");
-  const [txnContext, setTxnContext] = useState('')
+  const [txnContext, setTxnContext] = useState("");
   const [tokens, setTokens] = useState({
-    polygon: []
+    polygon: [],
   });
-  const [onramp, setOnRamp] = useState(false)
+  const [onramp, setOnRamp] = useState(false);
 
   const [fetch, { data: data, loading, pagination }] =
-  useLazyQueryWithPagination(ERC20TokensQueryPolygon);
+    useLazyQueryWithPagination(ERC20TokensQueryPolygon);
 
   useEffect(() => {
     // for now hardcoded the tokens
-    if ('0x288d1d682311018736B820294D22Ed0DBE372188') {
+    if ("0x288d1d682311018736B820294D22Ed0DBE372188") {
       setTokens({
-        polygon: []
+        polygon: [],
       });
       fetch({
-        owner: '0x288d1d682311018736B820294D22Ed0DBE372188',
-        limit: 20
+        owner: "0x288d1d682311018736B820294D22Ed0DBE372188",
+        limit: 20,
       });
     }
 
@@ -83,14 +85,14 @@ const PromptComponent = () => {
 
   useEffect(() => {
     if (data) {
-      setTokens(existingTokens => ({
+      setTokens((existingTokens) => ({
         polygon: [
           ...existingTokens.polygon,
-          ...(data?.polygon?.TokenBalance || [])
-        ]
+          ...(data?.polygon?.TokenBalance || []),
+        ],
       }));
 
-      console.log('this is data of polygon ', data);
+      console.log("this is data of polygon ", data);
     }
   }, [data]);
 
@@ -137,25 +139,27 @@ const PromptComponent = () => {
   const closeModal = () => {
     setConfirmModal(false);
     setIsLoading(false);
-  }
+  };
 
   const sendTransaction = async () => {
     setConfirmModal(false);
-    console.log('this is txn type ', txnType);
+    // setIsLoading(false);
+    // return;
+    console.log("this is txn type ", txnType);
     const signer = walletInstance.getSigner();
-    if(txnType === 'bridge') {
+    if (txnType === "bridge") {
       await bundleAndSend(transactions);
       toast.success("Transaction successfull !!");
     } else {
       let txnResp;
       console.log("transactions formed ", transactions);
-      
-      if((currentChain !== 137 && currentChain !== 100) && txnType === 'swap') {
-        toast.error('Swap is not supported on testnets');
+
+      if (currentChain !== 137 && currentChain !== 100 && txnType === "swap") {
+        toast.error("Swap is not supported on testnets");
         setIsLoading(false);
         return;
       }
-  
+
       if (transactions.length === 1) {
         const finalTxn = {
           ...transactions[0],
@@ -171,12 +175,11 @@ const PromptComponent = () => {
             gasLimit: "0xF4240",
           };
         });
-  
+
         console.log("these are txns", txns);
         const txnResp = await signer.sendBatchTransaction(txns);
         console.log("response from bvatched txn", txnResp);
       }
-
     }
 
     toast.success("Transaction successfull !!");
@@ -189,7 +192,7 @@ const PromptComponent = () => {
       params: {
         intent: intent,
         userAddress: walletAddress,
-        chain: currentChain
+        chain: currentChain,
       },
     });
     const transactions = JSON.parse(res.data.transactions);
@@ -210,13 +213,13 @@ const PromptComponent = () => {
   // celoTestnet = 44787,
   // mantleTestnet = 5001,
   const getChainName = (chain) => {
-    if(chain === 137) return "Polygon"
-    if(chain === 100) return "Gnosis"
-    if(chain === 5) return "Goerli"
-    if(chain === 80001) return "Polygon Mumbai"
-    if(chain === 420) return "Optimism Testnet"
-    if(chain === 10200) return "Chiado Testnet"
-    if(chain === 44787) return "Celo Testnet"
+    if (chain === 137) return "Polygon";
+    if (chain === 100) return "Gnosis";
+    if (chain === 5) return "Goerli";
+    if (chain === 80001) return "Polygon Mumbai";
+    if (chain === 420) return "Optimism Testnet";
+    if (chain === 10200) return "Chiado Testnet";
+    if (chain === 44787) return "Celo Testnet";
   };
 
   return (
@@ -228,14 +231,19 @@ const PromptComponent = () => {
             {walletAddress ? (
               <div>
                 <TokenSection tokens={tokens.polygon} />
-              <p className="walletaddress-div"> {walletAddress.slice(0, 7) + "..." + walletAddress.slice(37, 42)} </p>
-              {/* <CopyToClipboard text={walletAddress} onCopy={() => toast.success('Address copied')}>
+                <p className="walletaddress-div">
+                  {" "}
+                  {walletAddress.slice(0, 7) +
+                    "..." +
+                    walletAddress.slice(37, 42)}{" "}
+                </p>
+                {/* <CopyToClipboard text={walletAddress} onCopy={() => toast.success('Address copied')}>
               <FaRegCopy style={{ marginLeft: "10px" }} />
                 </CopyToClipboard> */}
                 <button className="connect-btn" onClick={() => setOnRamp(true)}>
                   Onramp funds
                 </button>
-                </div>
+              </div>
             ) : (
               <div>
                 <Dropdown
@@ -245,14 +253,14 @@ const PromptComponent = () => {
                   placement="bottom"
                   className="chain-dropdown"
                 >
-                  <Button>{ getChainName(currentChain)}</Button>
+                  <Button>{getChainName(currentChain)}</Button>
                 </Dropdown>
                 <button className="connect-btn" onClick={() => connectWallet()}>
                   Connect
                 </button>
               </div>
             )}
-                {/* <OnrampComponent openOnramp={onramp} /> */}
+            {/* <OnrampComponent openOnramp={onramp} /> */}
           </div>
         </div>
         <div className="prompt">
@@ -268,9 +276,9 @@ const PromptComponent = () => {
             />
             <button
               className="executeButton"
-              onClick={() => { 
-                generateTransactions()
-                // await createAttestation(walletAddress, intent); 
+              onClick={() => {
+                generateTransactions();
+                // await createAttestation(walletAddress, intent);
               }}
             >
               Execute
@@ -291,5 +299,3 @@ const PromptComponent = () => {
 };
 
 export default PromptComponent;
-
-
