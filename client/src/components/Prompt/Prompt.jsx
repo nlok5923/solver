@@ -19,6 +19,8 @@ import { FaRegCopy } from "react-icons/fa";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import OnrampComponent from "../Onramp/Onramp";
 import { saveToLocalStorage } from "../../utils/saveToLocalstorage";
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+// import { AutoComplete } from "react-autocomplete";
 
 const PromptComponent = () => {
   const items = [
@@ -64,10 +66,31 @@ const PromptComponent = () => {
   const [tokens, setTokens] = useState({
     polygon: [],
   });
+  const [previosIntents, setPreviousIntents] = useState([]);
   const [onramp, setOnRamp] = useState(false);
 
   const [fetch, { data: data, loading, pagination }] =
     useLazyQueryWithPagination(ERC20TokensQueryPolygon);
+  
+  const gateway = (hash) => `https://beige-yeasty-scorpion-513.mypinata.cloud/ipfs/${hash}`;
+  const fetchIntents = async () => {
+    let hashes = localStorage.getItem(walletAddress);
+    if(hashes) {
+      hashes = JSON.parse(hashes);
+      console.log(hashes, hashes[0])
+      for(let i=0; i < hashes.length; i++) {
+      const res = await Axios.get(gateway(hashes[i]))
+      console.log(res);
+      let pIntents = previosIntents;
+      pIntents.push({
+        id: i,
+        name: res.data.intent
+      })
+      setPreviousIntents(pIntents)
+      console.log("all intens ", previosIntents)
+      }
+    }
+  }
 
   useEffect(() => {
     // for now hardcoded the tokens
@@ -81,6 +104,7 @@ const PromptComponent = () => {
       });
     }
 
+    fetchIntents()
     // initStripe()
   }, [fetch, walletAddress]);
 
@@ -260,6 +284,54 @@ const PromptComponent = () => {
     if (chain === 44787) return "Celo Testnet";
   };
 
+  const itemss = [
+    {
+      id: 0,
+      name: 'Cobol'
+    },
+    {
+      id: 1,
+      name: 'JavaScript'
+    },
+    {
+      id: 2,
+      name: 'Basic'
+    },
+    {
+      id: 3,
+      name: 'PHP'
+    },
+    {
+      id: 4,
+      name: 'Java'
+    }
+  ]
+
+  const handleOnSearch = (string, results) => {
+    // onSearch will have as the first callback parameter
+    // the string searched and for the second the results.
+    console.log(string, results)
+    setIntent(string);
+  }
+
+  const handleOnSelect = (item) => {
+    // the item selected
+    console.log(item)
+  }
+
+  const handleOnFocus = () => {
+    console.log('Focused')
+  }
+
+  const formatResult = (item) => {
+    return (
+      <>
+        {/* <span style={{ display: 'block', textAlign: 'left' }}>id: {item.id}</span> */}
+        <span style={{ display: 'block', textAlign: 'left' }}>name: {item.name}</span>
+      </>
+    )
+  }
+
   return (
     <div>
       <Loader isLoading={isLoading}>
@@ -303,6 +375,17 @@ const PromptComponent = () => {
         </div>
         <div className="prompt">
           <div className="content">
+          {/* <ReactSearchAutocomplete
+            items={previosIntents}
+            onSearch={handleOnSearch}
+            // onHover={handleOnHover}
+            onSelect={handleOnSelect}
+            onFocus={handleOnFocus}
+            autoFocus
+            onKeyDown={() => { console.log("key down") }}
+            className="inputField"
+            formatResult={formatResult}
+          /> */}
             <input
               className="inputField"
               type="text"
